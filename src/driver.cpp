@@ -40,7 +40,8 @@ int main(int argc, char* argv[])
         
     }
 
-    PGMimageProcessor p = new PGMimageProcessor()
+    RBLCAM001::PGMimageProcessor p(filename);
+    
 
 
 }

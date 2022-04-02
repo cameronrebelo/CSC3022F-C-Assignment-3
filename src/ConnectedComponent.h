@@ -15,7 +15,7 @@ namespace RBLCAM001
             ConnectedComponent();
             ~ConnectedComponent();
             ConnectedComponent(const ConnectedComponent &rhs);
-            ConnectedComponent &operator=(const ConnectedComponent &rhs);
+            ConnectedComponent& operator=(const ConnectedComponent &rhs);
             ConnectedComponent(ConnectedComponent &&rhs);
             ConnectedComponent &operator=(ConnectedComponent &&rhs);
             //Accessors
