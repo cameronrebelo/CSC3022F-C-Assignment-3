@@ -1,7 +1,8 @@
 #include "ConnectedComponent.h"
 
-RBLCAM001::ConnectedComponent::ConnectedComponent()
+RBLCAM001::ConnectedComponent::ConnectedComponent(int id)
 {
+    ID = id;
     pixelNum = 0;
 }
 RBLCAM001::ConnectedComponent::ConnectedComponent(const ConnectedComponent &rhs)
@@ -43,7 +44,11 @@ RBLCAM001::ConnectedComponent & RBLCAM001::ConnectedComponent::operator=(Connect
     }
     return *this;
 }
-
+RBLCAM001::ConnectedComponent::~ConnectedComponent()
+{
+    pixelNum = 0;
+    ID = -1;    
+}
 
 
 

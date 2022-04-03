@@ -12,7 +12,7 @@ namespace RBLCAM001
 
         public:
             //Big 6
-            ConnectedComponent();
+            ConnectedComponent(int id);
             ~ConnectedComponent();
             ConnectedComponent(const ConnectedComponent &rhs);
             ConnectedComponent& operator=(const ConnectedComponent &rhs);
