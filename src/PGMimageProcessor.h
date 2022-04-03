@@ -24,7 +24,7 @@ namespace RBLCAM001
             PGMimageProcessor &operator=(PGMimageProcessor &&rhs);
             
             //Methods
-            
+            unsigned char ** readData(unsigned char threshold);
             int extractComponents(unsigned char threshold, int minValidSize);
             int filterComponentsBySize(int minSize, int maxSize);
             bool writeComponents(const std::string & outFileName);
