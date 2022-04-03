@@ -11,63 +11,57 @@ RBLCAM001::ConnectedComponent::ConnectedComponent(const ConnectedComponent &rhs)
     ID = rhs.ID;
     for (size_t i = 0; i < rhs.pixelNum; i++)
     {
-        pixels[i]= rhs.pixels[i];
+        pixels[i] = rhs.pixels[i];
     }
 }
-RBLCAM001::ConnectedComponent& RBLCAM001::ConnectedComponent::operator=(const ConnectedComponent &rhs)
+RBLCAM001::ConnectedComponent &RBLCAM001::ConnectedComponent::operator=(const ConnectedComponent &rhs)
 {
-    this->ID=rhs.ID;
-    this->pixelNum=rhs.pixelNum;
+    this->ID = rhs.ID;
+    this->pixelNum = rhs.pixelNum;
     for (size_t i = 0; i < rhs.pixelNum; i++)
     {
-        this->pixels[i]=rhs.pixels[i];
+        this->pixels[i] = rhs.pixels[i];
     }
     return *this;
-
 }
-RBLCAM001::ConnectedComponent::ConnectedComponent(ConnectedComponent &&rhs) :
-pixelNum{rhs.pixelNum},
-ID{rhs.ID}
+RBLCAM001::ConnectedComponent::ConnectedComponent(ConnectedComponent &&rhs) : pixelNum{rhs.pixelNum},ID{rhs.ID}
 {
     for (size_t i = 0; i < rhs.pixelNum; i++)
     {
-        pixels[i]= rhs.pixels[i];
+        pixels[i] = rhs.pixels[i];
     }
 }
 
-RBLCAM001::ConnectedComponent & RBLCAM001::ConnectedComponent::operator=(ConnectedComponent &&rhs)
+RBLCAM001::ConnectedComponent &RBLCAM001::ConnectedComponent::operator=(ConnectedComponent &&rhs)
 {
-    if(this!= &rhs){
+    if (this != &rhs)
+    {
         pixels = rhs.pixels;
         ID = rhs.ID;
-        pixelNum=rhs.pixelNum;
+        pixelNum = rhs.pixelNum;
     }
     return *this;
 }
 RBLCAM001::ConnectedComponent::~ConnectedComponent()
 {
     pixelNum = 0;
-    ID = -1;    
+    ID = -1;
 }
 
+int RBLCAM001::ConnectedComponent::getID()
+{
+    return ID;
+}
+int RBLCAM001::ConnectedComponent::getPixelNum()
+{
+    return pixelNum;
+}
+std::vector<std::pair<int, int>> RBLCAM001::ConnectedComponent::getPixels()
+{
+    return pixels;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void RBLCAM001::ConnectedComponent::addPixel(std::pair<int,int> newPixel){
+void RBLCAM001::ConnectedComponent::addPixel(std::pair<int, int> newPixel)
+{
     pixels.push_back(newPixel);
 }

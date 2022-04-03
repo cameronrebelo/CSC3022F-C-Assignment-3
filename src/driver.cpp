@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
     }
 
     RBLCAM001::PGMimageProcessor p(filename);
+    p.extractComponents(threshold,min);
     
 
 
