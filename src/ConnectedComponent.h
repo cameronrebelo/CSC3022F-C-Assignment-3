@@ -19,9 +19,9 @@ namespace RBLCAM001
             ConnectedComponent(ConnectedComponent &&rhs);
             ConnectedComponent &operator=(ConnectedComponent &&rhs);
             //Accessors
-            int getID();
-            int getPixelNum();
-            std::vector<std::pair<int,int>> getPixels();
+            int getID() const;
+            int getPixelNum() const;
+            std::vector<std::pair<int,int>> getPixels() const;
             void addPixel(std::pair<int,int> newPixel);
 
             };

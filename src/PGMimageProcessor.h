@@ -11,7 +11,7 @@ namespace RBLCAM001
     class PGMimageProcessor
     {
         private:
-            std::vector<std::unique_ptr<ConnectedComponent>> compVector;
+            std::vector<std::shared_ptr<ConnectedComponent>> compVector;
             std::string fileName;
 
         public:
@@ -35,6 +35,7 @@ namespace RBLCAM001
             int getSmallestSize(void) const;
 
             //Printing
+            void print();
             void printComponentData(const ConnectedComponent &theComponent) const;
     };
 }

@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     int threshold; 
     int min = 3;
     int max;
-    std::string writeFileName;
+    std::string writeFileName="";
     bool printing;
     
     //amount of operations to be done stored in vector with corresponding file name
@@ -42,6 +42,14 @@ int main(int argc, char* argv[])
 
     RBLCAM001::PGMimageProcessor p(filename);
     p.extractComponents(threshold,min);
+    p.filterComponentsBySize(min,max);
+    if(writeFileName!="")
+    {
+        p.writeComponents(writeFileName);
+    }
+    if(printing){
+        p.print();
+    }
     
 
 

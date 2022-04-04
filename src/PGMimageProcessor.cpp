@@ -40,7 +40,15 @@ RBLCAM001::PGMimageProcessor::PGMimageProcessor(PGMimageProcessor &&rhs)
     std::move(begin(rhs.compVector), end(rhs.compVector), std::inserter(compVector, end(compVector)));
 }
 
-// move assignment
+RBLCAM001::PGMimageProcessor &RBLCAM001::PGMimageProcessor::operator=(PGMimageProcessor &&rhs)
+{
+    if (this != &rhs)
+    {
+        fileName = rhs.fileName;
+        compVector = rhs.compVector;
+    }
+    return *this;
+}
 
 RBLCAM001::PGMimageProcessor::~PGMimageProcessor()
 {
@@ -122,7 +130,7 @@ int RBLCAM001::PGMimageProcessor::extractComponents(unsigned char threshold, int
 
                 if (temp.getPixelNum() >= minValidSize)
                 {
-                    compVector.push_back(std::make_unique<RBLCAM001::ConnectedComponent>(temp));
+                    compVector.push_back(std::make_shared<RBLCAM001::ConnectedComponent>(temp));
                     compNum++;
                 }
             }
@@ -134,17 +142,18 @@ int RBLCAM001::PGMimageProcessor::extractComponents(unsigned char threshold, int
 
 int RBLCAM001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSize){
 
-    std::vector<std::shared_ptr<ConnectedComponent>>::iterator it = compVector.begin();
-    while(it!=compVector.end())
-    {
-        if(**it.getPixelNum()>maxSize || it->getPixelNum()<minSize)
-        {
+    // std::vector<std::shared_ptr<ConnectedComponent>>::iterator it = compVector.begin();
+    // while(it!=compVector.end())
+    // {
+    //     if(**it.getPixelNum()>maxSize || it->getPixelNum()<minSize)
+    //     {
 
-        }
-    }
+    //     }
+    // }
     compVector.erase(std::remove_if(compVector.begin(), compVector.end(),
-                       [minSize,maxSize](std::shared_ptr<RBLCAM001::ConnectedComponent> c) -> bool { if(c->getPixelNum()<minSize || c->getPixelNum()>maxSize)
-                       {
+                       [minSize,maxSize](std::shared_ptr<RBLCAM001::ConnectedComponent> c) -> bool 
+                       { if(c->getPixelNum()<minSize || c->getPixelNum()>maxSize)
+                            {
                            return true;
                        } }),
         compVector.end());
@@ -179,7 +188,7 @@ bool RBLCAM001::PGMimageProcessor::writeComponents(const std::string & outFileNa
                 }
             }
             out.close();
-    
+    return true;
 }
 
 unsigned char **RBLCAM001::PGMimageProcessor::readData(unsigned char threshold)
@@ -212,16 +221,6 @@ unsigned char **RBLCAM001::PGMimageProcessor::readData(unsigned char threshold)
             for (size_t j = 0; j < width; j++)
             {
                 file >> fileRead[i][j];
-                // unsigned char test;
-                // file >> test;
-                // if (test >= threshold)
-                // {
-                //     fileRead[i][j] = 255;
-                // }
-                // else
-                // {
-                //     fileRead[i][j] = 0;
-                // }
             }
         }
         file.close();
@@ -257,4 +256,23 @@ int RBLCAM001::PGMimageProcessor::getSmallestSize(void) const
         }
     }
     return smallest;
+}
+
+void RBLCAM001::PGMimageProcessor::print()
+{
+    std::cout << "Components:" << std::endl;
+    for (size_t i = 0; i < compVector.size(); i++)
+    {
+        printComponentData(*compVector[i]);
+    }
+    std::cout << "\n\nThe Total number of components was " << sizeof(compVector) << std::endl;
+    std::cout << "\n\nThe Smallest component was " << getSmallestSize() << std::endl;
+    std::cout << "\n\nThe Sargest component was " << getLargestSize() << std::endl;
+    
+}
+
+
+void RBLCAM001::PGMimageProcessor::printComponentData(const RBLCAM001::ConnectedComponent &theComponent) const
+{
+    std::cout << theComponent.getID() << " - Size: " << theComponent.getPixelNum() << std::endl;
 }

@@ -48,15 +48,15 @@ RBLCAM001::ConnectedComponent::~ConnectedComponent()
     ID = -1;
 }
 
-int RBLCAM001::ConnectedComponent::getID()
+int RBLCAM001::ConnectedComponent::getID() const
 {
     return ID;
 }
-int RBLCAM001::ConnectedComponent::getPixelNum()
+int RBLCAM001::ConnectedComponent::getPixelNum() const
 {
     return pixelNum;
 }
-std::vector<std::pair<int, int>> RBLCAM001::ConnectedComponent::getPixels()
+std::vector<std::pair<int, int>> RBLCAM001::ConnectedComponent::getPixels() const
 {
     return pixels;
 }
@@ -64,4 +64,5 @@ std::vector<std::pair<int, int>> RBLCAM001::ConnectedComponent::getPixels()
 void RBLCAM001::ConnectedComponent::addPixel(std::pair<int, int> newPixel)
 {
     pixels.push_back(newPixel);
+    pixelNum++;
 }
