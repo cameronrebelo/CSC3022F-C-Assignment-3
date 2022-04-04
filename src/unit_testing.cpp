@@ -1,20 +1,32 @@
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+#include <cmath>
+#include <string>
+#include <sstream>
+#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "PGMimageProcessor.h"
 #include "ConnectedComponent.h"
 
-TEST_CASE("Postfix Increment", "[PostfixIncrement]") {
-	nd_vector_t a = { 1.0, 2.0, 3.0 }; //1A constructor.	
-	const auto b = a++;
+TEST_CASE("Accessor Checks for PGMimageProcessor") {
+	RBLCAM001::PGMimageProcessor p ("test.pgm"); 	
 	SECTION("RETURN VALUE") {
-		const auto buf = b.get_buffer();
-		REQUIRE(is_close(buf[0], 1.0));
-		REQUIRE(is_close(buf[1], 2.0));
-		REQUIRE(is_close(buf[2], 3.0));
+		const auto count = p.getComponentCount();
+		REQUIRE(is_close(count, 0));
+        REQUIRE(is_close(p.getLargestSize, 0));
+        REQUIRE(is_close(p.getSmallestSize, 0));
 	}
-	SECTION("POST CONDITION VEC a") {
-		const auto buf = a.get_buffer();
-		REQUIRE(is_close(buf[0], 2.0));
-		REQUIRE(is_close(buf[1], 3.0));
-		REQUIRE(is_close(buf[2], 4.0));
+
+}
+TEST_CASE("Accessor Checks for ConnectedComponent") {
+	RBLCAM001::ConnectedComponent c (3); 	
+	SECTION("RETURN VALUE") {
+		const auto ID = c.getID();
+        const auto pNum = c.getPixelNum();
+        const auto px = c.getPixels();
+		REQUIRE(is_close(ID, 3));
+        REQUIRE(is_close(pNum, 0));
+        REQUIRE(is_close(px, nullptr));
 	}
 }
