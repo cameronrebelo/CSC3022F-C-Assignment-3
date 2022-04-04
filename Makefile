@@ -1,5 +1,3 @@
-GLOBALIGNORE=sloan_image.pgm
-
 findcomp: PGMimageProcessor.o ConnectedComponent.o driver.o
 	g++ bin/PGMimageProcessor.o bin/ConnectedComponent.o bin/driver.o -o findcomp -std=c++2a
  
@@ -11,9 +9,13 @@ ConnectedComponent.o: src/ConnectedComponent.cpp src/ConnectedComponent.h
 
 driver.o: src/driver.cpp
 	g++ -c src/driver.cpp -o bin/driver.o -std=c++2a
-   
+
+unit_test: src/unit_test.cpp src/ConnectedComponent.h src/PGMimageProcessor.h
+	g++ -c src/unit_test.cpp -o bin/unit_test.o -std=c++2a
+	g++ bin/unit_test.o -o unit -std=c++2a
+
 test:
-	./findcomp -t 50 -s 5 100 -p -w output.pgm input.pgm
+	./findcomp -t 50 -s 5 100 -p -w output.pgm data/input.pgm
 
 clean:
 	@rm -f bin/*.o
