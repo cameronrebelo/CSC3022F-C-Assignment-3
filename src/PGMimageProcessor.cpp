@@ -5,15 +5,15 @@
 #include <bits/stdc++.h>
 #include "PGMimageProcessor.h"
 
-int height, width = 0;
 
+//Big 6
 
-
+//Default Constructor
 RBLCAM001::PGMimageProcessor::PGMimageProcessor(std::string filename)
 {
     fileName = filename;
 }
-
+//Copy Constructor
 RBLCAM001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor &rhs)
 {
     fileName = rhs.fileName;
@@ -22,7 +22,7 @@ RBLCAM001::PGMimageProcessor::PGMimageProcessor(const PGMimageProcessor &rhs)
         *(compVector[i]) = *(rhs.compVector[i]);
     }
 }
-
+//Copy assignment operator
 RBLCAM001::PGMimageProcessor &RBLCAM001::PGMimageProcessor::operator=(const PGMimageProcessor &rhs)
 {
     this->fileName = rhs.fileName;
@@ -32,14 +32,14 @@ RBLCAM001::PGMimageProcessor &RBLCAM001::PGMimageProcessor::operator=(const PGMi
     }
     return *this;
 }
-
+//Move Constructor
 RBLCAM001::PGMimageProcessor::PGMimageProcessor(PGMimageProcessor &&rhs)
 {
     fileName = rhs.fileName;
     rhs.fileName = "";
     std::move(begin(rhs.compVector), end(rhs.compVector), std::inserter(compVector, end(compVector)));
 }
-
+//Move assignment operator
 RBLCAM001::PGMimageProcessor &RBLCAM001::PGMimageProcessor::operator=(PGMimageProcessor &&rhs)
 {
     if (this != &rhs)
@@ -49,7 +49,7 @@ RBLCAM001::PGMimageProcessor &RBLCAM001::PGMimageProcessor::operator=(PGMimagePr
     }
     return *this;
 }
-
+//Destructor
 RBLCAM001::PGMimageProcessor::~PGMimageProcessor()
 {
     for (size_t i = 0; i < compVector.size(); i++)
@@ -59,23 +59,27 @@ RBLCAM001::PGMimageProcessor::~PGMimageProcessor()
 }
 
 //Methods 
+int height, width = 0;
 
-bool isValid(unsigned char **grid, int row, int col, unsigned char threshold)
+//Function to determine if a pixel at a gien coordinate is valid in that it is within the bounds of the grid and above the threshold value
+bool RBLCAM001::PGMimageProcessor::isValid(unsigned char **grid, int row, int col, unsigned char threshold)
 {
-    // If cell lies out of bounds
     if (row < 0 || col < 0 || row >= height || col >= width)
+    {
         return false;
+    }
 
-    // If cell is already visited
     if (grid[row][col] < threshold)
+    {
         return false;
+    }
 
-    // Otherwise
     return true;
 }
 
-// Function to perform the BFS traversal
-void BFS(unsigned char **grid, int row, int col, RBLCAM001::ConnectedComponent &comp, unsigned char threshold) // based on a bfs algortihm from https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/
+//Function to do a BFS traversal of the pixel data
+// based on a bfs algortihm from https://www.geeksforgeeks.org/breadth-first-traversal-bfs-on-a-2d-array/
+void RBLCAM001::PGMimageProcessor::BFS(unsigned char **grid, int row, int col, RBLCAM001::ConnectedComponent &comp, unsigned char threshold) 
 {
     int dRow[] = {-1, 0, 1, 0};
     int dCol[] = {0, 1, 0, -1};
@@ -86,19 +90,15 @@ void BFS(unsigned char **grid, int row, int col, RBLCAM001::ConnectedComponent &
 
     while (!q.empty())
     {
-
         std::pair<int, int> cell = q.front();
         int x = cell.first;
         int y = cell.second;
 
         comp.addPixel(cell);
-
         q.pop();
 
-        // Go to the adjacent cells
-        for (int i = 0; i < 4; i++)
+        for (size_t i = 0; i < 4; i++)
         {
-
             int adjx = x + dRow[i];
             int adjy = y + dCol[i];
 
@@ -106,13 +106,13 @@ void BFS(unsigned char **grid, int row, int col, RBLCAM001::ConnectedComponent &
             {
 
                 q.push({adjx, adjy});
-
                 grid[adjx][adjy] = 0;
             }
         }
     }
 }
 
+//Function that extracts all data from the pgm file and then makes sure its above the minimum size value
 int RBLCAM001::PGMimageProcessor::extractComponents(unsigned char threshold, int minValidSize)
 {
     int compNum = 0;
@@ -140,16 +140,8 @@ int RBLCAM001::PGMimageProcessor::extractComponents(unsigned char threshold, int
     return compNum;
 }
 
+//Function that discards components that dont meet the size requirements
 int RBLCAM001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSize){
-
-    // std::vector<std::shared_ptr<ConnectedComponent>>::iterator it = compVector.begin();
-    // while(it!=compVector.end())
-    // {
-    //     if(**it.getPixelNum()>maxSize || it->getPixelNum()<minSize)
-    //     {
-
-    //     }
-    // }
     compVector.erase(std::remove_if(compVector.begin(), compVector.end(),
                        [minSize,maxSize](std::shared_ptr<RBLCAM001::ConnectedComponent> c) -> bool 
                        { if(c->getPixelNum()<minSize || c->getPixelNum()>maxSize)
@@ -160,6 +152,7 @@ int RBLCAM001::PGMimageProcessor::filterComponentsBySize(int minSize, int maxSiz
     
 }
 
+//Funstion to write component data to an output pgm file
 bool RBLCAM001::PGMimageProcessor::writeComponents(const std::string & outFileName)
 {
     unsigned char output[height][width];
@@ -191,6 +184,7 @@ bool RBLCAM001::PGMimageProcessor::writeComponents(const std::string & outFileNa
     return true;
 }
 
+//Function that reads in data from a pgm file into a 2D array
 unsigned char **RBLCAM001::PGMimageProcessor::readData(unsigned char threshold)
 {
     std::string line = "";
@@ -228,11 +222,13 @@ unsigned char **RBLCAM001::PGMimageProcessor::readData(unsigned char threshold)
     }
 }
 
+//Returns amount of components
 int RBLCAM001::PGMimageProcessor::getComponentCount(void) const
 {
     return compVector.size();
 }
 
+//Returns largest size of component
 int RBLCAM001::PGMimageProcessor::getLargestSize(void) const
 {
     int largest = 0;
@@ -245,6 +241,8 @@ int RBLCAM001::PGMimageProcessor::getLargestSize(void) const
     }
     return largest;
 }
+
+//Returns smallest size of component
 int RBLCAM001::PGMimageProcessor::getSmallestSize(void) const
 {
     int smallest = 0;
@@ -258,6 +256,7 @@ int RBLCAM001::PGMimageProcessor::getSmallestSize(void) const
     return smallest;
 }
 
+//Prints all data of components, amount of components and largest and smallest sizes
 void RBLCAM001::PGMimageProcessor::print()
 {
     std::cout << "Components:" << std::endl;
@@ -271,7 +270,7 @@ void RBLCAM001::PGMimageProcessor::print()
     
 }
 
-
+//Print data for one specific component
 void RBLCAM001::PGMimageProcessor::printComponentData(const RBLCAM001::ConnectedComponent &theComponent) const
 {
     std::cout << theComponent.getID() << " - Size: " << theComponent.getPixelNum() << std::endl;

@@ -24,6 +24,8 @@ namespace RBLCAM001
             PGMimageProcessor &operator=(PGMimageProcessor &&rhs);
             
             //Methods
+            bool isValid(unsigned char **grid, int row, int col, unsigned char threshold);
+            void BFS(unsigned char **grid, int row, int col, RBLCAM001::ConnectedComponent &comp, unsigned char threshold);
             unsigned char ** readData(unsigned char threshold);
             int extractComponents(unsigned char threshold, int minValidSize);
             int filterComponentsBySize(int minSize, int maxSize);
